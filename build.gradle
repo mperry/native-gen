@@ -1,0 +1,53 @@
+
+
+buildscript {        // make the frege plugin available in our build
+    repositories {
+        mavenLocal() // if you have the plugin installed locally, this is enough
+        maven {
+            url = "https://oss.sonatype.org/content/groups/public"
+        }
+    }
+    dependencies {
+        classpath 'com.github.mperry.frege:frege-gradle-plugin:0.2-SNAPSHOT'
+    }
+}
+
+apply plugin: "groovy"
+apply plugin: "maven"
+apply plugin: "signing"
+apply plugin: "frege"
+
+defaultTasks "build"
+
+ext {
+    baseVersion = "0.1"
+    isSnapshot = true
+    snapshotAppendix = "-SNAPSHOT"
+    projectVersion = baseVersion + (isSnapshot ? snapshotAppendix : "")
+
+    fregeBaseVersion = "3.22.367"
+    fregeClassifier = "-g2737683"
+    fregeVersion = "3.22.324-g630677b"
+//    fregeVersion = "$fregeBaseVersion$fregeClassifier"
+}
+
+apply from: "gradle/sonatype.gradle"
+
+version = projectVersion
+group = groupName
+archivesBaseName = baseJarName
+
+
+
+repositories {
+
+    mavenLocal()
+    mavenCentral()
+
+}
+
+
+dependencies {
+
+    compile "com.theoryinpractise.frege:frege:$fregeVersion"
+}
